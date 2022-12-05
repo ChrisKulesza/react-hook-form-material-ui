@@ -1,33 +1,14 @@
 import { Button, Paper, Typography } from "@material-ui/core";
-import { FormProvider, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { FormInputText } from "./form-components/FormInputText";
-import { FormInputMultiCheckbox } from "./form-components/FormInputMultiCheckbox";
-import { FormInputDropdown } from "./form-components/FormInputDropdown";
-import { FormInputDate } from "./form-components/FormInputDate";
-import { FormInputSlider } from "./form-components/FormInputSlider";
-import { FormInputRadio } from "./form-components/FormInputRadio";
+import { Carrier, getInitialCarrier } from "./models/Carrier.Interface";
 
-interface IFormInput {
-  textValue: string;
-  radioValue: string;
-  checkboxValue: string[];
-  dateValue: Date;
-  dropdownValue: string;
-  sliderValue: number;
-}
-
-const defaultValues = {
-  textValue: "",
-  radioValue: "",
-  checkboxValue: [],
-  dateValue: new Date(),
-  dropdownValue: "",
-  sliderValue: 0,
-};
 export const FormDemo = () => {
-  const methods = useForm<IFormInput>({ defaultValues: defaultValues });
+  const initialCarrier = getInitialCarrier();
+
+  const methods = useForm<Carrier>({ defaultValues: initialCarrier });
   const { handleSubmit, reset, control, setValue, watch } = methods;
-  const onSubmit = (data: IFormInput) => console.log(data);
+  const onSubmit = (data: Carrier) => console.log(data);
 
   return (
     <Paper
@@ -38,38 +19,27 @@ export const FormDemo = () => {
         margin: "10px 300px",
       }}
     >
-      <Typography variant="h6"> Form Demo</Typography>
+      <Typography variant="h6">Form Demo</Typography>
 
-      <FormInputText name="textValue" control={control} label="Text Input" />
-      <FormInputRadio
-        name={"radioValue"}
+      <FormInputText name="name" control={control} label="Name" required />
+      <FormInputText
+        name="gsdb"
         control={control}
-        label={"Radio Input"}
+        label="Contract GSDB Code"
+        strictLength={5}
+        required
       />
-      <FormInputDropdown
-        name="dropdownValue"
+      <FormInputText
+        name="carrierManager"
         control={control}
-        label="Dropdown Input"
-      />
-      <FormInputDate name="dateValue" control={control} label="Date Input" />
-      <FormInputMultiCheckbox
-        control={control}
-        setValue={setValue}
-        name={"checkboxValue"}
-        label={"Checkbox Input"}
-      />
-      <FormInputSlider
-        name={"sliderValue"}
-        control={control}
-        setValue={setValue}
-        label={"Slider Input"}
+        label="Carrier Manager"
       />
 
-      <Button onClick={handleSubmit(onSubmit)} variant={"contained"}>
+      <Button onClick={handleSubmit(onSubmit)} variant="contained">
         {" "}
         Submit{" "}
       </Button>
-      <Button onClick={() => reset()} variant={"outlined"}>
+      <Button onClick={() => reset()} variant="outlined">
         {" "}
         Reset{" "}
       </Button>
